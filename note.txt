@@ -1,0 +1,51 @@
+npx create-react-app old-local-blog --template typescript
+npm add -D prettier eslint-plugin-prettier eslint-config-prettier 
+*  mục đích của prettier là đảm bảo mã nguồn được định dạng một cách tự động và đồng nhất, giúp cải thiện quy trình phát triển và duy trì mã nguồn.
+-prettier dùng để cấu hình vào devdepencitive
+-Sau đó vào package.json để cấu hình lint 
+
+   "lint": "eslint --ext ts,tsx src/",
+   //Cấu hình nó chạy nó sẽ chạy vào lint để kt lỗi
+    "lint:fix":"eslint --fix --ext ts,tsx src/"
+    // dùng để fix lỗi
+
+-Sau đó cấu hình .prettierrc dùng để cấu hình lại độ dài của dòng và không dùng dấu chấm phẩy.
+-Cấu hình .eslintrc
+-cấu hình .editorconfig
+-Cấu hình tsconfig.json
+-Tải tailwind 
+npm i tailwindcss postcss autoprefixer
+npx tailwindcss init -p -> xuất hiện file tailwind.config.js
+Sau đó cài đặt thêm gói prettier cho tailwindcss
+npm i -D prettier-plugin-tailwindcss
+
+Cuối cùng ta chạy lệnh npm run prettier||yarn prettier để kiểm tra lỗi prettier. Sau đó dùng npm run lint||yarn lint để kt lỗi chỗ nào.
+Tiếp đó dùng npm run lint:fix để tự động sửa lỗi. Kt lại yarn prettier coi còn lỗi không
+Sau đó cài redux toolkit
+yarn add @reduxjs/toolkit react redux
+
+Sau đó tạo các components và bắt đầu tạo redux toolkit
+b1 tạo store
+b2 tạo reducer bằng cách tạo một file trong folder blog => blog.reducer.ts và sau xuất nó react
+b3 Vào store để nhận giá trị từ reducer
+b4 vào file index.tsx sử dụng Provider của react redux và import Store vào để nhận giá trị cho tất cả các components
+
+Sau khi xong ta tạo một folder contants để test dữ liệu vào reducer.
+Bây h ta sẽ làm chức năng updatePost.
+Đầu tiên ta sẽ làm action redux trong file blog.reducer.ts luôn và định kiểu type cho nó.
+Sau đó ta vào file CreateBlog lưu giữ giá trị form và truyền xuống form
+Khi ta truyền xuống form truocs khi thay đổi giá trị của từng ô input ta phải lưu giữ giá trị ban đầu trước khi thay đổi.
+ value={formData.title}
+onChange={(event) => setFormData((prev) => ({ ...prev, title: event.target.value }))}
+
+=>Luồng đi sẽ như thế nay:Đầu tiên ta sẽ tạo một createAction có tên là gì đó để nhận biết action đó là gì, và tạo một createReducer cohwuas giá trị mặc định và reducer.
+1. Khi ở bên CreateBlog ta dispatch một action có tên mà createAction đã tạo và truyền vào dữ liệu mà mình muốn post lên.
+2. Khi dispatch thì bên reducer sẽ tạo case với function được dispatch đó sau đó sẽ xử lý push vào dữ liệu đã tạo sẵn.
+3. Khi post xong thì sẽ cập nhạt lại dữ liệu bên postList.tsx và hiển thị ra màn hình
+
+-Đối với xử lý với delete thì ta dispatch bên postList  và truyền vào mọt tham số là id và truyền thông qua props tới postItem.
+PostItem sẽ nhận lại giá trị props đó và ta sẽ định kiểu dữ liệu cho props handleDelete. Va ta sẽ dùng onClick cho nút delete. Lưu ý vì nó là một callback nên dùng  => à truyền Id vào.
+==>Luồng đi sẽ là khi người dùng click vào thì nó sẽ nhận giá trị id và nhảy sang postItem dispatch function deletePost. Khi dispatch thì reducer sẽ xử lý
+
+-Edit nó cũng cần có id nên nó cũng disptach có truyền tham số Id. Nhưng reducer nó sẽ tìm kiếm dựa vào find để lấy hết giá trị trong id đó. Trong initState ta sẽ tạo một object để lưu giữ giá trị khi ta edit sẽ là null và trong interface ta định kiểu nó là một Post là type mà ta đã định kiểu sẵn. Sau đó ta gán giá trị vừa tìm được vào object ta mới khởi tạo. 
+-và sau đó ta vào CreateBlog lấy dữ liệu nhờ vào useSelector. Và dùng useEffect để thay đổi dữ liệu trong form.
